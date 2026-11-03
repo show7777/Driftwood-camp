@@ -1,0 +1,99 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with role, email, display name, contact phone, and timestamps",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "name": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 40 },
+        "role": { "type": "string", "enum": ["parent", "director"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["uid", "email", "name", "role", "createdAt"]
+    },
+    "Camper": {
+      "title": "Camper",
+      "description": "Registered camper details linked to parent",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "parentId": { "type": "string" },
+        "parentName": { "type": "string", "maxLength": 100 },
+        "parentEmail": { "type": "string", "format": "email" },
+        "parentPhone": { "type": "string", "maxLength": 40 },
+        "childName": { "type": "string", "maxLength": 100 },
+        "age": { "type": "number" },
+        "program": { "type": "string", "enum": ["Weekend camp", "Summer camp (two months)"] },
+        "sessionChoice": { "type": "string" },
+        "emergencyContact": { "type": "string", "maxLength": 120 },
+        "paymentMethod": { "type": "string" },
+        "paymentStatus": { "type": "string", "enum": ["Not recorded", "Pending", "Partially paid", "Paid", "Waived", "Refunded"] },
+        "amountReceived": { "type": "string" },
+        "paymentReference": { "type": "string", "maxLength": 100 },
+        "paymentScreenshot": { "type": "string" },
+        "transport": { "type": "string" },
+        "pickupArea": { "type": "string", "maxLength": 160 },
+        "notes": { "type": "string", "maxLength": 1000 },
+        "directorStatus": { "type": "string", "enum": ["Pending review", "Approved", "Needs information", "Waiting list", "Declined"] },
+        "directorNotes": { "type": "string", "maxLength": 1000 },
+        "directorName": { "type": "string", "maxLength": 120 },
+        "directorSignature": { "type": "string" },
+        "parentSignature": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["parentId", "childName", "age", "program", "sessionChoice", "emergencyContact", "paymentMethod", "transport", "createdAt"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Real-time activity and attendance logs posted by organizers for campers",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "camperId": { "type": "string" },
+        "camperName": { "type": "string", "maxLength": 100 },
+        "activityDate": { "type": "string" },
+        "activity": { "type": "string", "maxLength": 120 },
+        "attendance": { "type": "string", "enum": ["Attended", "Arrived", "Checked out", "Update"] },
+        "note": { "type": "string", "maxLength": 500 },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["camperId", "activityDate", "activity", "attendance", "note", "createdAt"]
+    },
+    "CamperAgreement": {
+      "title": "CamperAgreement",
+      "description": "Signed consent and liability agreements for campers",
+      "type": "object",
+      "properties": {
+        "camperId": { "type": "string" },
+        "agreementKey": { "type": "string" },
+        "agreementTitle": { "type": "string" },
+        "agreementText": { "type": "string" },
+        "signature": { "type": "string" },
+        "signedAt": { "type": "string" }
+      },
+      "required": ["camperId", "agreementKey", "agreementTitle", "agreementText", "signedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User profile collection storing role and parent/director profile info"
+    },
+    "/campers/{camperId}": {
+      "schema": { "$ref": "#/entities/Camper" },
+      "description": "Campers registered for Driftwood Camp"
+    },
+    "/activity_logs/{logId}": {
+      "schema": { "$ref": "#/entities/ActivityLog" },
+      "description": "Real-time activity logs and attendance events"
+    },
+    "/camper_agreements/{agreementId}": {
+      "schema": { "$ref": "#/entities/CamperAgreement" },
+      "description": "Signed agreements and waivers for campers"
+    }
+  }
+}

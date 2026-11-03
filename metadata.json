@@ -1,0 +1,6 @@
+{
+  "name": "Driftwood Camp - Outdoor Adventures & Activity Hub",
+  "description": "Driftwood Camp registration, parent portal, real-time activity updates, camper profiles, and director administration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
