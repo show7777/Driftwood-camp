@@ -20,6 +20,7 @@ import { updateCamperDirectorReview, postActivityLog } from '../lib/db.ts';
 import { SignaturePad } from '../components/SignaturePad.tsx';
 import { notifyPaymentAndStatusUpdate } from '../lib/telegram.ts';
 import { useLanguage } from '../context/LanguageContext.tsx';
+import { GoogleSheetsStatusCard } from '../components/GoogleSheetsStatusCard.tsx';
 
 interface DirectorPortalProps {
   campers: Camper[];
@@ -385,6 +386,9 @@ export const DirectorPortal: React.FC<DirectorPortalProps> = ({ campers }) => {
           <span className="text-[10px] text-stone-400">{stats.paidCount} paid in full</span>
         </div>
       </div>
+
+      {/* Google Sheets Live Database Card */}
+      <GoogleSheetsStatusCard />
 
       {/* Real-Time Activity Broadcast Form */}
       <section className="bg-white rounded-2xl border border-emerald-900/30 p-5 sm:p-6 shadow-xs">

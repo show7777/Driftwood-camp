@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { User, Phone, Mail, Baby, CheckCircle2, AlertCircle, Clock, ShieldCheck, FileCheck, Edit3 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.tsx';
+import { useLanguage } from '../context/LanguageContext.tsx';
 import { Camper, CamperAgreement } from '../types.ts';
 import { getCamperAgreements } from '../lib/db.ts';
 import { ActivityLogsFeed } from '../components/ActivityLogsFeed.tsx';
+import { GoogleSheetsStatusCard } from '../components/GoogleSheetsStatusCard.tsx';
 
 interface ParentPortalProps {
   campers: Camper[];
@@ -12,6 +14,7 @@ interface ParentPortalProps {
 
 export const ParentPortal: React.FC<ParentPortalProps> = ({ campers, openRegisterModal }) => {
   const { userProfile, updateProfile } = useAuth();
+  const { t } = useLanguage();
   const [editingProfile, setEditingProfile] = useState(false);
   const [nameInput, setNameInput] = useState(userProfile?.name || '');
   const [phoneInput, setPhoneInput] = useState(userProfile?.phone || '');
@@ -104,8 +107,8 @@ export const ParentPortal: React.FC<ParentPortalProps> = ({ campers, openRegiste
               <User className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-stone-900">Parent Profile & Contact</h2>
-              <span className="text-[11px] text-stone-400">Stored in database</span>
+              <h2 className="text-sm font-bold text-stone-900">{t('parentProfileTitle')}</h2>
+              <span className="text-[11px] text-stone-400">{t('storedInDb')}</span>
             </div>
           </div>
           <button
@@ -336,6 +339,11 @@ export const ParentPortal: React.FC<ParentPortalProps> = ({ campers, openRegiste
             );
           })
         )}
+      </section>
+
+      {/* Google Sheets Database Connection Card */}
+      <section>
+        <GoogleSheetsStatusCard />
       </section>
     </div>
   );

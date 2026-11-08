@@ -9,11 +9,15 @@ import { auth, googleAuthProvider } from '../lib/firebase.ts';
 import { getUserProfile, saveUserProfile, seedDemoDataIfEmpty } from '../lib/db.ts';
 import { UserProfile, UserRole } from '../types.ts';
 
+import { GoogleAuthProvider } from 'firebase/auth';
+
 interface AuthContextType {
   currentUser: FirebaseUser | null;
   userProfile: UserProfile | null;
   loading: boolean;
-  signInWithGoogle: () => Promise<void>;
+  driveAccessToken: string | null;
+  signInWithGoogle: () => Promise<string | null>;
+  connectGoogleDrive: () => Promise<string | null>;
   loginAsDemoUser: (role: UserRole) => Promise<void>;
   switchRole: (newRole: UserRole) => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
@@ -25,6 +29,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [driveAccessToken, setDriveAccessToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Initialize demo data in background
@@ -35,6 +40,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setCurrentUser(firebaseUser);
+      if (!firebaseUser) {
+        setDriveAccessToken(null);
+      }
       if (firebaseUser) {
         try {
           const profile = await getUserProfile(firebaseUser.uid);
@@ -87,10 +95,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => unsubscribe();
   }, []);
 
-  const signInWithGoogle = async () => {
+  const connectGoogleDrive = async (): Promise<string | null> => {
     try {
+      googleAuthProvider.addScope('https://www.googleapis.com/auth/drive');
+      googleAuthProvider.addScope('https://www.googleapis.com/auth/drive.file');
+      const res = await signInWithPopup(auth, googleAuthProvider);
+      const credential = GoogleAuthProvider.credentialFromResult(res);
+      const token = credential?.accessToken || null;
+      if (token) {
+        setDriveAccessToken(token);
+      }
+      return token;
+    } catch (err) {
+      console.error('Google Drive connection error:', err);
+      return null;
+    }
+  };
+
+  const signInWithGoogle = async (): Promise<string | null> => {
+    try {
+      googleAuthProvider.addScope('https://www.googleapis.com/auth/drive');
+      googleAuthProvider.addScope('https://www.googleapis.com/auth/drive.file');
       const res = await signInWithPopup(auth, googleAuthProvider);
       localStorage.removeItem('driftwood_demo_user');
+      const credential = GoogleAuthProvider.credentialFromResult(res);
+      const token = credential?.accessToken || null;
+      if (token) {
+        setDriveAccessToken(token);
+      }
+
       const isDirector = res.user.email === 'yonatanwondwsn75@gmail.com';
       const existing = await getUserProfile(res.user.uid);
       if (existing) {
@@ -108,6 +141,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await saveUserProfile(newProf);
         setUserProfile(newProf);
       }
+      return token;
     } catch (error) {
       console.error('Sign-in error:', error);
       throw error;
@@ -166,6 +200,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (currentUser) {
       await signOut(auth);
     }
+    setDriveAccessToken(null);
     localStorage.removeItem('driftwood_demo_user');
     setUserProfile(null);
   };
@@ -176,7 +211,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         currentUser,
         userProfile,
         loading,
+        driveAccessToken,
         signInWithGoogle,
+        connectGoogleDrive,
         loginAsDemoUser,
         switchRole,
         updateProfile,

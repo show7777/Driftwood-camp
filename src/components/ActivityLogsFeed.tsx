@@ -194,7 +194,7 @@ export const ActivityLogsFeed: React.FC<ActivityLogsFeedProps> = ({
 
       <div className="bg-stone-50 px-4 py-2.5 border-t border-stone-200 text-xs text-stone-500 flex items-center justify-between">
         <span>Showing {filteredLogs.length} updates</span>
-        <span className="text-[11px] text-emerald-700 font-medium">● Firestore Live Sync Enabled</span>
+        <span className="text-[11px] text-emerald-700 font-medium">● Stream Active</span>
       </div>
     </div>
   );

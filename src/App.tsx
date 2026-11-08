@@ -98,10 +98,10 @@ function MainApp() {
             </div>
 
             <div>
-              <h4 className="text-white font-bold text-xs uppercase tracking-wider mb-2">Real-Time Database Connectivity</h4>
+              <h4 className="text-white font-bold text-xs uppercase tracking-wider mb-2">Safety & Instant Alerts</h4>
               <p className="text-emerald-200/80">
-                Connected to persistent cloud database with real-time stream synchronization for user profiles,
-                attendee rosters, digitally signed consent records, and live activity logs.
+                Supervised outdoor activities with live organizer updates, digital consent agreements,
+                and real-time Telegram bot alerts for registrations and payment receipts.
               </p>
             </div>
           </div>

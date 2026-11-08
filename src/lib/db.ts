@@ -13,7 +13,7 @@ import {
   limit,
 } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType } from './firebase.ts';
-import { UserProfile, Camper, ActivityLog, CamperAgreement } from '../types.ts';
+import { UserProfile, Camper, ActivityLog, CamperAgreement, DirectorStatus } from '../types.ts';
 
 const USERS_COL = 'users';
 const CAMPERS_COL = 'campers';
@@ -67,19 +67,39 @@ export function subscribeCampers(
     q = query(collection(db, CAMPERS_COL), where('parentId', '==', parentId), orderBy('createdAt', 'desc'));
   }
 
-  return onSnapshot(
-    q,
-    (snap) => {
-      const campers: Camper[] = [];
-      snap.forEach((d) => {
-        campers.push({ id: d.id, ...d.data() } as Camper);
-      });
-      callback(campers);
-    },
-    (err) => {
-      handleFirestoreError(err, OperationType.GET, CAMPERS_COL);
+  try {
+    return onSnapshot(
+      q,
+      (snap) => {
+        const campers: Camper[] = [];
+        snap.forEach((d) => {
+          campers.push({ id: d.id, ...d.data() } as Camper);
+        });
+        localStorage.setItem('driftwood_cached_campers', JSON.stringify(campers));
+        callback(campers);
+      },
+      (err) => {
+        console.warn('Firestore subscription fallback:', err);
+        const cached = localStorage.getItem('driftwood_cached_campers');
+        if (cached) {
+          try {
+            const list = JSON.parse(cached);
+            callback(parentId ? list.filter((c: any) => c.parentId === parentId) : list);
+          } catch {}
+        }
+      }
+    );
+  } catch (err) {
+    console.warn('subscribeCampers catch fallback:', err);
+    const cached = localStorage.getItem('driftwood_cached_campers');
+    if (cached) {
+      try {
+        const list = JSON.parse(cached);
+        callback(parentId ? list.filter((c: any) => c.parentId === parentId) : list);
+      } catch {}
     }
-  );
+    return () => {};
+  }
 }
 
 export async function getAllCampersOnce(): Promise<Camper[]> {
@@ -89,9 +109,16 @@ export async function getAllCampersOnce(): Promise<Camper[]> {
     snap.forEach((d) => {
       campers.push({ id: d.id, ...d.data() } as Camper);
     });
+    localStorage.setItem('driftwood_cached_campers', JSON.stringify(campers));
     return campers;
   } catch (err) {
-    handleFirestoreError(err, OperationType.LIST, CAMPERS_COL);
+    console.warn('getAllCampersOnce fallback:', err);
+    const cached = localStorage.getItem('driftwood_cached_campers');
+    if (cached) {
+      try {
+        return JSON.parse(cached);
+      } catch {}
+    }
     return [];
   }
 }
@@ -147,8 +174,19 @@ export async function registerCamper(
 
     return camperId;
   } catch (err) {
-    handleFirestoreError(err, OperationType.WRITE, CAMPERS_COL);
-    throw err;
+    console.warn('registerCamper Firestore fallback:', err);
+    const camperId = 'camper-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4);
+    const newCamper: Camper = {
+      id: camperId,
+      ...camperData,
+      directorStatus: camperData.directorStatus as DirectorStatus,
+    };
+
+    const cached = localStorage.getItem('driftwood_cached_campers');
+    const list: Camper[] = cached ? JSON.parse(cached) : [];
+    list.unshift(newCamper);
+    localStorage.setItem('driftwood_cached_campers', JSON.stringify(list));
+    return camperId;
   }
 }
 

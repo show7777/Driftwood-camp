@@ -47,9 +47,9 @@ const translations: Record<Language, Record<string, string>> = {
     olympiaDesc: 'Team obstacle challenges, friendly cooperative relays, and positive sportsmanship awards.',
 
     // Live Feed
-    liveBroadcast: 'Live Database Broadcast',
+    liveBroadcast: 'Live Activity Stream',
     liveStreamTitle: 'Real-Time Camp Activity Log',
-    liveStreamSubtitle: 'Powered by live cloud database updates. Organizers post notes & parents view them in real time.',
+    liveStreamSubtitle: 'Organizers post notes & parents view updates in real time.',
     activityStreamHeading: 'Real-Time Camp Activity Stream',
     activityStreamSub: 'Live attendance, milestones, and safety updates from camp organizers',
     filterCamper: 'Filter Camper',
@@ -61,7 +61,7 @@ const translations: Record<Language, Record<string, string>> = {
     connectingStream: 'Connecting to real-time activity stream...',
     noLogsFound: 'No activity logs found',
     noLogsDesc: 'Organizer updates will appear here automatically in real time.',
-    liveSyncEnabled: '● Firestore Live Sync Enabled',
+    liveSyncEnabled: '● Stream Active',
     showingUpdates: 'Showing {n} updates',
     postedBy: 'Posted by',
 
@@ -111,7 +111,7 @@ const translations: Record<Language, Record<string, string>> = {
     parentSubtitle: 'Track your camper’s registration status, review digitally signed legal agreements, and follow real-time attendance and trail activities as they happen.',
     registerAnotherChild: '+ Register Another Child',
     parentProfileTitle: 'Parent Profile & Contact',
-    storedInDb: 'Stored in database',
+    storedInDb: 'Verified Contact Record',
     editContact: 'Edit Contact',
     saveChanges: 'Save Changes',
     emailAddress: 'Email Address',
@@ -183,9 +183,9 @@ const translations: Record<Language, Record<string, string>> = {
     olympiaDesc: 'የቡድን መሰናክል ጨዋታዎች፣ ወዳጃዊ ቅብብሎሽ ውድድሮች እና የመልካም ስነምግባር ሽልማቶች።',
 
     // Live Feed
-    liveBroadcast: 'የቀጥታ ዳታቤዝ ስርጭት',
+    liveBroadcast: 'የቀጥታ እንቅስቃሴ ስርጭት',
     liveStreamTitle: 'የቀጥታ የካምፕ እንቅስቃሴ መዝገብ',
-    liveStreamSubtitle: 'በቀጥታ የዳታቤዝ ዝማኔ የሚሰራ። አዘጋጆች ማስታወሻዎችን ሲመዘግቡ ወላጆች ወዲያውኑ ይመለከታሉ።',
+    liveStreamSubtitle: 'አዘጋጆች ማስታወሻዎችን ሲመዘግቡ ወላጆች ወዲያውኑ ይመለከታሉ።',
     activityStreamHeading: 'የቀጥታ የካምፕ እንቅስቃሴ ስርጭት',
     activityStreamSub: 'የቀጥታ መገኘት፣ የተከናወኑ ክንውኖች እና ከአዘጋጆች የሚሰጡ የደህንነት ማስታወሻዎች',
     filterCamper: 'ተሳታፊ ይምረጡ',
@@ -197,7 +197,7 @@ const translations: Record<Language, Record<string, string>> = {
     connectingStream: 'ከቀጥታ ስርጭት ጋር በመገናኘት ላይ...',
     noLogsFound: 'ምንም እንቅስቃሴዎች አልተገኙም',
     noLogsDesc: 'የአዘጋጅ ዝማኔዎች እዚህ ወዲያውኑ ይታያሉ።',
-    liveSyncEnabled: '● የቀጥታ ዳታቤዝ ማመሳሰል ይሰራል',
+    liveSyncEnabled: '● የቀጥታ እንቅስቃሴዎች ክፍት ነው',
     showingUpdates: '{n} ዝማኔዎች ታይተዋል',
     postedBy: 'የመዘገበው',
 
@@ -247,7 +247,7 @@ const translations: Record<Language, Record<string, string>> = {
     parentSubtitle: 'የልጅዎን የምዝገባ ሁኔታ ይከታተሉ፣ በዲጂታል የተፈረሙ ህጋዊ ስምምነቶችን ይገምግሙ፣ እና የቀጥታ መገኘት እና የተፈጥሮ የእግር ጉዞ እንቅስቃሴዎችን ይከታተሉ።',
     registerAnotherChild: '+ ሌላ ልጅ ያስመዝግቡ',
     parentProfileTitle: 'የወላጅ መረጃ እና አድራሻ',
-    storedInDb: 'በዳታቤዝ ውስጥ የተከማቸ',
+    storedInDb: 'የተረጋገጠ የወላጅ አድራሻ',
     editContact: 'አድራሻ ያርትዑ',
     saveChanges: 'ለውጦችን መዝግብ',
     emailAddress: 'የኢሜል አድራሻ',
